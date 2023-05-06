@@ -1,5 +1,6 @@
 from data.workDB import connectToDB
 
+choiseHeroForBattle = {}
 battleMonsters = {}
 choiseHero = {}
 winProvePlayer = {}

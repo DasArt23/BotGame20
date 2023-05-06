@@ -28,9 +28,8 @@ class Battle:
         self.dataMessage = dataMessage if call is None else call.message
         self.id = call.message.chat.id if dataMessage is None else dataMessage.chat.id
 
-    async def startBattle(self, player: Hero):
+    async def startBattle(self):
         winProvePlayer[self.id] = None
-        choiseHero[self.id] = None
-        player.map = copy.deepcopy(MapForBattle)
-        await self.dataMessage.answer()
+        choiseHeroForBattle[self.id] = None
+        await self.dataMessage.answer(text="В процессе")
 

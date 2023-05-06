@@ -41,4 +41,4 @@ async def stats_heroes(message: types.Message):
 
 @dp.message_handler(aiogram.dispatcher.filters.Text(equals="Бой"))
 async def battle_start(message: types.Message):
-    await Battle()
+    await Battle(dataMessage=message).startBattle(choiseHero)
