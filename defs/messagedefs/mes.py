@@ -5,15 +5,22 @@ from menu.keyboardBut import *
 from data.workDB import connectToDB
 from data.values import *
 
+
 floor = '◽️'
 wall = '⬛️'
 characterEnemy = {3: "🔴", 4: "🟠", 5: "🟡"}
 characterPlayer = "🟢"
 
+
 class Useful:
     def __init__(self, dataMessage):
         self.dataMessage = dataMessage
         self.id = dataMessage.chat.id
+
+    @staticmethod
+    async def retHeroBattleStatistic(hero) -> str:
+        return f"----{hero.name}----\nАтака: {hero.attack}🗡️\nЗдоровье: {hero.hp}❤️ {hero.defens}🛡\nМана: " \
+            f"{hero.mana}🔮\nЛовкость: {hero.agility}👟️\nИнициатива: {hero.initiative}\nДеньги: {hero.money}🪙\n"
 
     async def SendText(self, text, keyboard=None, val=None, func="answer") -> None:
         """
@@ -25,23 +32,24 @@ class Useful:
         """
         send = self.dataMessage.answer
         if func == "edit":
-            #print('24:', text)
+            # print('24:', text)
             send = self.dataMessage.edit_text
         if keyboard is None:
             await send(text)
         else:
             try:
                 await send(text, reply_markup=keyboard)
-                #print(111, text)
+                # print(111, text)
             except aiogram.utils.exceptions.BadRequest as er:
                 try:
                     await send(text, reply_markup=keyboard())
-                    #print(222, text)
+                    # print(222, text)
                 except TypeError:
-                    #print(333)
+                    # print(333)
                     await send(text, reply_markup=keyboard(val))
 
     async def GenerateMonsters(self, Map) -> None:
+        """Изменяет словарь battleMonsters"""
         battleMonsters[self.id] = {
             3: {},
             4: {},
@@ -52,15 +60,16 @@ class Useful:
                 monster = Map[y][x]
                 if monster == 3:
                     battleMonsters[self.id][monster][f"{x} {y}"] = Monster(hp=2, attack=2, rangeAttack=1, coolDown=1,
-                                                                     reward=30)
+                                                                           reward=30)
                 elif monster == 4:
                     battleMonsters[self.id][monster][f"{x} {y}"] = Monster(hp=5, attack=1, rangeAttack=2, coolDown=1,
-                                                                     reward=20)
+                                                                           reward=20)
                 elif monster == 5:
                     battleMonsters[self.id][monster][f"{x} {y}"] = Monster(hp=1, attack=3, rangeAttack=1, coolDown=1,
-                                                                     reward=40)
+                                                                           reward=40)
 
-    async def GenerateMap(self, battleMap, hero: Hero):
+    @staticmethod
+    async def GenerateMap(battleMap, hero: Hero) -> str:
         returnMap = ""
         for y in range(len(battleMap)):
             for x in range(len(battleMap[y])):
@@ -75,6 +84,7 @@ class Useful:
                     returnMap += characterEnemy[battleMap[y][x]]
             returnMap += "\n"
         return returnMap
+
 
 class Start:
     def __init__(self, dataMessage):
@@ -95,7 +105,7 @@ class Start:
         if call.data.split("_")[1] == "Choice":
             if choiseHero[self.id] is None:
                 await Useful(dataMessage=self.dataMessage).SendText("Вы никого не выбрали", keyboard=character_choice,
-                                                                val=chararactersForChoise, func="edit")
+                                                                    val=chararactersForChoise, func="edit")
             else:
                 print(choiseHero)
                 for ch in chararactersForChoise:
@@ -120,6 +130,7 @@ class Start:
                         f"\nМана: {character[3]}\nЛовкость: {character[4]}\nИнициатива: {character[5]}",
                         keyboard=character_choice, val=chararactersForChoise, func="edit")
 
+
 class Statistic:
     def __init__(self, dataMessage):
         self.dataMessage = dataMessage
@@ -141,4 +152,3 @@ class Statistic:
     async def menu(self):
         await Useful(dataMessage=self.dataMessage).SendText(text="Выберите тип статистики для просмотра",
                                                             keyboard=Stats)
-

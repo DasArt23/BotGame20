@@ -1,6 +1,6 @@
 
 class Hero:
-    def __init__(self, id, name, hp, attack, mana, agility, initiative, rangeAttack, arm):
+    def __init__(self, id, name, hp, attack, mana, agility, initiative, rangeAttack, arm=None):
         self.id = id
         self.name = name
         self.hp, self.attack = hp, attack
@@ -35,6 +35,8 @@ class Hero:
 
     async def moveOnMap(self, direction: [int, int]):
         movingNum = 0
+        if direction == [0, 0]:
+            return self.map
         for y in range(len(self.map)):
             for x in range(len(self.map[y])):
                 if movingNum < 1 and self.map[y][x] == 2:
