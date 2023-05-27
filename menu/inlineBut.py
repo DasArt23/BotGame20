@@ -157,3 +157,6 @@ def parametersOfSelectedHero(name, parameters):
     keyboard.add(*buttons)
     keyboard.add(InlineKeyboardButton(text="Назад", callback_data="parameterHero_Назад"))
     return keyboard
+
+def buttonsForHiring():
+    pass
